@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090b10"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>KPL Metronome FREE V2</title>
+<style>
+:root{--bg:#090b10;--card:#161a23;--border:#333b49;--red:#f42d34;--green:#23b977;--muted:#adb5c2}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font:16px system-ui,-apple-system,sans-serif}
+main{max-width:620px;margin:auto;padding:22px 17px 45px;text-align:center}
+h1{font-size:23px;margin:4px 0 8px}h2{font-size:21px;margin:6px 0 15px}p{line-height:1.55}.muted{color:var(--muted)}.tiny{font-size:12px}.brand{font-size:clamp(62px,20vw,116px);font-weight:950;letter-spacing:-6px;line-height:1;color:white;text-shadow:0 0 35px #a3132066}.tag{letter-spacing:3px;font-size:12px;color:#c9ced6;font-weight:700}.pill{display:inline-block;border:1px solid #b53039;border-radius:50px;padding:6px 12px;color:#ff737b;font-size:12px;font-weight:800;letter-spacing:1px;margin:14px 0}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:19px;padding:20px 16px;margin:15px 0}
+button,input{font:inherit}button{border:1px solid #566071;background:#272e3b;color:white;border-radius:13px;padding:12px 15px;min-height:48px;cursor:pointer}button:active{opacity:.8}button:disabled{opacity:.4}.primary{background:#c61f2b;border-color:#e33b45;font-weight:800}.secondary{background:transparent;border-color:#a42e38;color:#ff9197}.wide{width:100%}.row{display:flex;align-items:center;justify-content:center;gap:9px;margin:13px 0}.row>*{min-width:0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:block;text-align:left;color:#ccd3dd;font-size:13px}.field input{display:block;margin-top:6px;width:100%;background:#0d1119;border:1px solid #58606c;border-radius:11px;color:#fff;padding:12px;font-size:20px;text-align:center}.rate{font-size:74px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1.1}.unit{color:#b8beca;font-size:14px}
+input[type=range]{width:100%;accent-color:var(--red)}.presets{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}.presets button{min-width:62px;padding:9px}
+.lamp{width:min(61vw,260px);aspect-ratio:1;border-radius:50%;border:9px solid #9a1818;background:#360909;margin:19px auto;transition:background .05s,box-shadow .05s}.lamp.on{background:#ff1717;box-shadow:0 0 55px #f33,inset 0 0 65px #ff8b8b}.lamp.rest{border-color:#157e50;background:#093421}.lamp.rest.on{background:#21d185;box-shadow:0 0 45px #13a965}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0}.stat{background:#0c111a;border:1px solid #343c49;border-radius:12px;padding:11px 4px}.stat b{display:block;font-size:22px;margin-top:5px;font-variant-numeric:tabular-nums}.stat small{color:#aeb7c3;font-size:11px}.phase{font-weight:850;letter-spacing:1.5px;color:#ff7279;font-size:20px}.phase.rest{color:#4de1a0}.checks{display:flex;justify-content:center;gap:24px;margin:16px 0;flex-wrap:wrap}.checks label{display:flex;gap:6px;align-items:center}.credit{font-size:12px;color:#b5bdc8;line-height:1.7;margin:25px auto}
+.hide{display:none!important}table{width:100%;border-collapse:collapse;text-align:left;font-size:13px}th,td{padding:11px 7px;border-bottom:1px solid #38404d}th:not(:first-child),td:not(:first-child){text-align:center}th{color:#e5ebf3}td:first-child{color:#d5dbe4}.yes{color:#53e3a4}.no{color:#ff8189}
+#fullscreen{position:fixed;inset:0;z-index:50;background:#090b10;display:none;flex-direction:column;align-items:center;justify-content:space-around;padding:calc(15px + env(safe-area-inset-top)) 12px calc(15px + env(safe-area-inset-bottom));text-align:center}#fullscreen.open{display:flex}#fullscreen.workflash{background:#b81220}#fullscreen.restflash{background:#075838}#fullscreen .lamp{width:min(70vw,45vh);margin:0}#fullscreen .rate{font-size:clamp(52px,16vw,115px)}#fullscreen .stats{width:min(100%,500px)}#fullscreen .row{width:100%}#fullscreen .row button{flex:1}#fullscreen .brandmini{font-weight:900;letter-spacing:2px}
+@media(max-width:360px){.rate{font-size:64px}.stats{gap:4px}.stat b{font-size:19px}button{padding:11px}}
+
+/* KPL FREE V2.1 — intro cinematografica, indipendente dal metronomo */
+#kplSplash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px;background:radial-gradient(ellipse at center,#1b1017 0%,#090b10 66%);color:#fff;overflow:hidden;text-align:center;padding:24px;transition:opacity .5s ease,visibility .5s ease}
+#kplSplash.splash-out{opacity:0;visibility:hidden;pointer-events:none}
+#kplSplash .splash-logo{font-size:clamp(95px,28vw,170px);font-weight:950;line-height:1;letter-spacing:-.075em;padding-right:.075em;animation:kplAppear 1.05s cubic-bezier(.2,.8,.2,1) both;text-shadow:0 0 65px #f42d3455}
+#kplSplash .splash-rule{width:min(68vw,260px);height:3px;border-radius:4px;background:linear-gradient(90deg,transparent,#f42d34,transparent);animation:kplLine 1.5s ease both}
+#kplSplash .splash-sub{font-size:clamp(10px,2.9vw,15px);font-weight:750;letter-spacing:clamp(2px,.8vw,5px);color:#c4cbd5;animation:kplFade 1.5s .25s both}
+#kplSplash .splash-label{font-size:13px;letter-spacing:3px;color:#ff888f;font-weight:750;animation:kplFade 1.3s .6s both}
+#skipSplash{position:absolute;bottom:calc(26px + env(safe-area-inset-bottom));right:22px;border:1px solid #596171;background:#141922aa;border-radius:24px;padding:8px 15px;min-height:42px;color:#d6dce5;font-size:13px}
+@keyframes kplAppear{from{opacity:0;transform:translateY(20px) scale(.87);filter:blur(10px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes kplLine{from{opacity:0;transform:scaleX(0)}to{opacity:1;transform:scaleX(1)}}
+@keyframes kplFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){#kplSplash *{animation:none!important}#kplSplash{transition:none}}
+</style></head><body><div id="kplSplash" role="dialog" aria-label="Presentazione KPL">
+<div class="splash-logo">KPL</div><div class="splash-rule"></div><div class="splash-sub">KAYAK PERFORMANCE LAB</div><div class="splash-label">METRONOME · FREE</div>
+<button id="skipSplash" type="button">Salta intro →</button></div>
+<main>
+<section id="welcome"><div class="pill">FREE · VERSIONE 2</div><div class="brand">KPL</div><div class="tag">KAYAK PERFORMANCE LAB</div><h1>KAYAK METRONOME</h1><p class="muted">Precisione. Ritmo. Performance.</p><div class="panel"><p>Il tuo ritmo di pagaiata, con intervalli di lavoro e recupero automatici.</p><button id="go" class="primary wide">▶ INIZIA ALLENAMENTO</button><button id="welcomepro" class="secondary wide" style="margin-top:10px">SCOPRI KPL PRO</button></div></section>
+<section id="app" class="hide"><div class="tag">KPL · KAYAK PERFORMANCE LAB</div><h1>METRONOME <span style="color:#ff7279">FREE</span></h1>
+<div class="panel"><div class="unit">FREQUENZA DI PAGAIATA</div><div class="rate" id="rate">80</div><div class="unit">colpi al minuto</div>
+<div class="row"><button id="minus" aria-label="Riduci frequenza">−</button><input id="bpm" type="number" min="1" max="300" value="80" style="width:110px;text-align:center;background:#0b1018;border:1px solid #58606c;border-radius:12px;color:white;padding:12px;font-size:24px"><button id="plus" aria-label="Aumenta frequenza">+</button></div>
+<input type="range" id="slider" min="50" max="200" value="80" aria-label="Frequenza"><div class="presets"><button data-bpm="60">60</button><button data-bpm="80">80</button><button data-bpm="100">100</button><button data-bpm="120">120</button></div></div>
+<div class="panel"><h2>PROGRAMMA INTERVALLI</h2><div class="grid">
+<label class="field">Lavoro (secondi)<input id="work" type="number" min="1" max="86400" value="120"></label>
+<label class="field">Recupero (secondi)<input id="rest" type="number" min="0" max="86400" value="60"></label>
+<label class="field">Ripetizioni<input id="reps" type="number" min="1" max="999" value="8"></label>
+<label class="field">Modalità<input value="Ritmo costante" disabled aria-label="Modalità FREE"></label>
+</div><p class="muted tiny">Il metronomo scandisce i colpi durante il lavoro e si ferma nel recupero. L'ultimo recupero non viene eseguito.</p></div>
+<div class="panel"><div id="phase" class="phase">PRONTO</div><div class="muted" id="round">Ripetizione 1/8</div><div class="lamp" id="lamp"></div>
+<div class="stats"><div class="stat"><small>FASE RIMANENTE</small><b id="remaining">02:00</b></div><div class="stat"><small>TEMPO TOTALE</small><b id="elapsed">00:00</b></div><div class="stat"><small>COLPI</small><b id="count">0</b></div></div>
+<div class="row"><button id="start" class="primary" style="flex:2">▶ AVVIA</button><button id="pause" style="flex:1" disabled>⏸ PAUSA</button><button id="stop" style="flex:1" disabled>■ STOP</button></div>
+<button id="enter" class="wide">⛶ SCHERMO INTERO</button><div class="checks"><label><input id="sound" type="checkbox" checked> Audio</label><label><input id="visual" type="checkbox" checked> Luce</label></div><p id="status" class="muted tiny" role="status">Imposta i parametri e premi AVVIA.</p></div>
+<button id="apppro" class="secondary wide">🚀 SCOPRI KPL COACH MODE PRO</button></section>
+<section id="summary" class="hide"><div class="pill">KPL · ALLENAMENTO</div><div class="brand" style="font-size:70px">KPL</div><h1 id="summarytitle">ALLENAMENTO COMPLETATO</h1><p id="summarysub" class="muted">Ottimo lavoro!</p><div class="panel"><div class="stats"><div class="stat"><small>RIPETIZIONI</small><b id="sreps">0/0</b></div><div class="stat"><small>FREQUENZA</small><b id="sbpm">80</b></div><div class="stat"><small>COLPI TEORICI</small><b id="scount">0</b></div></div><div class="grid"><div class="stat"><small>LAVORO SVOLTO</small><b id="swork">00:00</b></div><div class="stat"><small>RECUPERO SVOLTO</small><b id="srest">00:00</b></div></div><div class="stat" style="margin-top:12px"><small>DURATA COMPLESSIVA</small><b id="stotal">00:00</b></div><p class="tiny muted">I colpi teorici sono calcolati dalla frequenza impostata, non misurati direttamente sulla pagaia.</p></div>
+<button id="again" class="primary wide">↻ NUOVO ALLENAMENTO</button><button id="summarypro" class="secondary wide" style="margin-top:10px">SCOPRI I VANTAGGI DELLA PRO</button></section>
+<section id="pro" class="hide"><div class="pill">KPL · COACH MODE PRO</div><div class="brand" style="font-size:70px">KPL</div><h1>PORTA IL TUO ALLENAMENTO AL LIVELLO SUCCESSIVO</h1><p class="muted">Non limitarti a seguire un ritmo. Programma la tua performance.</p>
+<div class="panel"><h2>FREE vs PRO</h2><table><thead><tr><th>Funzione</th><th>FREE</th><th>PRO</th></tr></thead><tbody>
+<tr><td>Metronomo audio e luce</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+<tr><td>Timer lavoro/recupero</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+<tr><td>Ripetizioni automatiche</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+<tr><td>Ritmo diverso per ogni fase</td><td class="no">—</td><td class="yes">✓</td></tr>
+<tr><td>Recupero a frequenza guidata</td><td class="no">—</td><td class="yes">✓</td></tr>
+<tr><td>Sequenze personalizzate</td><td class="no">—</td><td class="yes">✓</td></tr>
+<tr><td>Allenamenti a più blocchi</td><td class="no">—</td><td class="yes">✓</td></tr>
+<tr><td>Riscaldamento e defaticamento programmati</td><td class="no">—</td><td class="yes">✓</td></tr>
+<tr><td>Schermata completa</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+<tr><td>Riepilogo sessione</td><td>Base</td><td>Avanzato</td></tr>
+</tbody></table></div>
+<div class="panel"><h2>UN ESEMPIO PRO</h2><p>6 × 3 minuti con progressione automatica:</p><p><strong>1° minuto</strong> · 70 colpi/min<br><strong>2° minuto</strong> · 80 colpi/min<br><strong>3° minuto</strong> · 90 colpi/min<br><strong>Recupero</strong> · 60 secondi a 50 colpi/min</p><p class="muted tiny">Disponibilità commerciale e modalità d'acquisto saranno comunicate dopo la fase beta.</p></div>
+<button id="backpro" class="primary wide">← TORNA ALLA FREE</button></section>
+<footer class="credit">Ideato e sviluppato da <strong>Girolamo Lo Monaco</strong><br>KPL · Kayak Performance Lab · Research &amp; Development<br><span class="tiny">Su iPhone: Safari → Condividi → Aggiungi alla schermata Home.</span></footer>
+</main>
+<section id="fullscreen" aria-label="Modalità a schermo intero"><div class="brandmini">KPL · METRONOME FREE</div><div><div id="fphase" class="phase">PRONTO</div><div id="fround" class="muted">Ripetizione 1/8</div></div><div><div class="rate" id="frate">80</div><div class="unit">COLPI / MINUTO</div></div><div class="lamp" id="flamp"></div><div class="stats"><div class="stat"><small>RIMANENTI</small><b id="fremain">02:00</b></div><div class="stat"><small>TOTALE</small><b id="felapsed">00:00</b></div><div class="stat"><small>COLPI</small><b id="fcount">0</b></div></div><div class="row"><button id="fstart" class="primary">▶ AVVIA</button><button id="fpause">⏸ PAUSA</button><button id="fexit">✕ ESCI</button></div><div class="tiny muted">Girolamo Lo Monaco · KPL Research & Development</div></section>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+let bpm=80, audio=null, running=false, paused=false, phase='work', phaseStart=0, phaseElapsed=0, totalElapsed=0, doneWork=0, doneRest=0, repsDone=0, reps=8, work=120, rest=60, currentRep=1, count=0, beatNext=0, raf=0, last=0, generation=0, soundQueue=[], timerFlash=0;
+const fmt=s=>{s=Math.max(0,Math.ceil(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+const show=name=>['welcome','app','summary','pro'].forEach(id=>$(id).classList.toggle('hide',id!==name));
+function rate(v){if(running)return;let n=Math.round(Number(v));if(!Number.isFinite(n))n=bpm;bpm=Math.max(1,Math.min(300,n));$('rate').textContent=$('frate').textContent=$('bpm').value=bpm;$('slider').value=Math.max(50,Math.min(200,bpm))}
+function params(){const w=Number($('work').value),r=Number($('rest').value),n=Number($('reps').value);if(!Number.isInteger(w)||w<1||w>86400||!Number.isInteger(r)||r<0||r>86400||!Number.isInteger(n)||n<1||n>999){alert('Controlla i valori: lavoro 1–86400 s, recupero 0–86400 s, ripetizioni 1–999.');return false}work=w;rest=r;reps=n;return true}
+function lockSettings(v){['work','rest','reps','bpm','slider','minus','plus'].forEach(id=>$(id).disabled=v);document.querySelectorAll('[data-bpm]').forEach(x=>x.disabled=v)}
+function phaseUi(){let isRest=phase==='rest';$('phase').textContent=$('fphase').textContent=isRest?'RECUPERO':'LAVORO';$('phase').classList.toggle('rest',isRest);$('fphase').classList.toggle('rest',isRest);$('round').textContent=$('fround').textContent='Ripetizione '+currentRep+'/'+reps;$('lamp').classList.toggle('rest',isRest);$('flamp').classList.toggle('rest',isRest);$('status').textContent=isRest?'Recupero: il metronomo è fermo.':'Segui il ritmo impostato.';clearFlash()}
+function clearFlash(){clearTimeout(timerFlash);$('lamp').classList.remove('on');$('flamp').classList.remove('on');$('fullscreen').classList.remove('workflash','restflash')}
+function flash(isRest=false){if(!$('visual').checked)return;clearFlash();$('lamp').classList.add('on');$('flamp').classList.add('on');$('fullscreen').classList.add(isRest?'restflash':'workflash');timerFlash=setTimeout(clearFlash,Math.min(170,30000/bpm))}
+function tone(at,frequency=950){if(!$('sound').checked||!audio)return;let o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=frequency;g.gain.setValueAtTime(.001,at);g.gain.exponentialRampToValueAtTime(.24,at+.007);g.gain.exponentialRampToValueAtTime(.001,at+.075);o.connect(g).connect(audio.destination);o.start(at);o.stop(at+.085)}
+function signal(){if(audio&&audio.state==='running')tone(audio.currentTime,650);flash(phase==='rest')}
+function update(){let duration=phase==='work'?work:rest;let remain=running?duration-phaseElapsed:work;let v=fmt(remain);$('remaining').textContent=$('fremain').textContent=v;$('elapsed').textContent=$('felapsed').textContent=fmt(totalElapsed);$('count').textContent=$('fcount').textContent=count}
+function nextPhase(){if(phase==='work'){repsDone++;if(repsDone>=reps){finish(true);return}if(rest>0){phase='rest'}else{currentRep++;phase='work'}}else{currentRep++;phase='work'}phaseElapsed=0;beatNext=0;phaseUi();signal()}
+function loop(t){if(!running||paused)return;if(!last)last=t;let dt=Math.max(0,Math.min((t-last)/1000,1));last=t;
+while(dt>0&&running){let duration=phase==='work'?work:rest,remaining=Math.max(0,duration-phaseElapsed);let step=Math.min(dt,remaining);phaseElapsed+=step;totalElapsed+=step;if(phase==='work')doneWork+=step;else doneRest+=step;dt-=step;if(phaseElapsed>=duration-0.00001)nextPhase();if(step===0&&running)break}
+if(!running)return;
+if(phase==='work'){if(!beatNext)beatNext=t;let beat=60000/bpm;while(t>=beatNext&&beatNext>0){count++;if(audio&&audio.state==='running')tone(audio.currentTime);flash();beatNext+=beat;if(t-beatNext>beat*3)beatNext=t+beat}}else beatNext=0;
+update();raf=requestAnimationFrame(loop)}
+async function start(){if(running)return;if(!params())return;try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){audio=audio||new AC();await audio.resume()}}catch(e){audio=null}
+running=true;paused=false;phase='work';phaseElapsed=0;totalElapsed=0;doneWork=0;doneRest=0;repsDone=0;currentRep=1;count=0;last=0;beatNext=0;generation++;lockSettings(true);$('start').disabled=true;$('pause').disabled=false;$('stop').disabled=false;$('pause').textContent=$('fpause').textContent='⏸ PAUSA';$('fstart').textContent='■ STOP';phaseUi();update();raf=requestAnimationFrame(loop)}
+function pause(){if(!running)return;paused=!paused;last=0;clearFlash();if(!paused&&audio)audio.resume().catch(()=>{});$('pause').textContent=$('fpause').textContent=paused?'▶ RIPRENDI':'⏸ PAUSA';$('status').textContent=paused?'Allenamento in pausa.':'Allenamento ripreso.';if(!paused)raf=requestAnimationFrame(loop)}
+function finish(completed){if(!running)return;running=false;paused=false;generation++;cancelAnimationFrame(raf);clearFlash();lockSettings(false);$('start').disabled=false;$('pause').disabled=true;$('stop').disabled=true;$('fstart').textContent='▶ AVVIA';$('fullscreen').classList.remove('open');$('summarytitle').textContent=completed?'ALLENAMENTO COMPLETATO':'ALLENAMENTO INTERROTTO';$('summarysub').textContent=completed?'Ottimo lavoro!':'Ecco il riepilogo della sessione.';$('sreps').textContent=repsDone+'/'+reps;$('sbpm').textContent=bpm+' BPM';$('scount').textContent=Math.round(doneWork*bpm/60).toLocaleString('it-IT');$('swork').textContent=fmt(doneWork);$('srest').textContent=fmt(doneRest);$('stotal').textContent=fmt(totalElapsed);show('summary')}
+$('go').onclick=()=>show('app');$('welcomepro').onclick=$('apppro').onclick=$('summarypro').onclick=()=>show('pro');$('backpro').onclick=()=>show('app');$('again').onclick=()=>{show('app');$('status').textContent='Pronto per un nuovo allenamento.';update()};
+$('minus').onclick=()=>rate(bpm-1);$('plus').onclick=()=>rate(bpm+1);$('bpm').onchange=e=>rate(e.target.value);$('slider').oninput=e=>rate(e.target.value);document.querySelectorAll('[data-bpm]').forEach(b=>b.onclick=()=>rate(b.dataset.bpm));// Durante la digitazione un campo può essere momentaneamente vuoto: niente alert.
+['work','rest','reps'].forEach(id=>$(id).addEventListener('input',()=>{
+  if(running)return;
+  const w=Number($('work').value),r=Number($('rest').value),n=Number($('reps').value);
+  if($('work').value!==''&&$('rest').value!==''&&$('reps').value!==''&&
+     Number.isInteger(w)&&w>=1&&w<=86400&&Number.isInteger(r)&&r>=0&&r<=86400&&
+     Number.isInteger(n)&&n>=1&&n<=999){
+    work=w;rest=r;reps=n;
+    $('round').textContent=$('fround').textContent='Ripetizione 1/'+reps;
+    update();
+  }
+}));
+$('start').onclick=start;$('stop').onclick=()=>finish(false);$('pause').onclick=pause;
+$('enter').onclick=()=>{$('fullscreen').classList.add('open')};$('fexit').onclick=()=>{$('fullscreen').classList.remove('open')};$('fstart').onclick=()=>running?finish(false):start();$('fpause').onclick=pause;document.addEventListener('keydown',e=>{if(e.key==='Escape')$('fullscreen').classList.remove('open')});document.addEventListener('visibilitychange',()=>{if(!document.hidden&&running&&!paused){last=0;if(audio)audio.resume().catch(()=>{})}});
+rate(80);params();update();
+})();
+</script><script>
+/* Intro separata dal motore di allenamento: nessun parametro o timer modificato. */
+(function(){
+  const splash=document.getElementById('kplSplash');
+  const skip=document.getElementById('skipSplash');
+  let closed=false;
+  function closeSplash(){
+    if(closed)return;
+    closed=true;
+    splash.classList.add('splash-out');
+    window.setTimeout(()=>splash.remove(),550);
+  }
+  skip.addEventListener('click',closeSplash);
+  window.setTimeout(closeSplash,2600);
+})();
+</script>
+</body></html>
