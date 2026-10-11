@@ -1,0 +1,18 @@
+KPL METRONOME FREE — versione installabile
+
+Caricare nella RADICE dello stesso repository GitHub Pages questi 7 file:
+index.html
+manifest.webmanifest
+sw.js
+icon-192.png
+icon-512.png
+apple-touch-icon.png
+favicon.png
+
+IMPORTANTE: tutti i file devono essere allo stesso livello, non in una cartella.
+La logica del metronomo resta quella del file caricato; sono stati aggiunti metadati PWA e registrazione service worker.
+
+Su iPhone: Safari > Condividi > Aggiungi alla schermata Home.
+Su Android: Chrome > menu > Installa app o Aggiungi a schermata Home.
+
+Verificare online prima di condividere il link.

@@ -1,0 +1,25 @@
+{
+  "name": "KPL METRONOME FREE",
+  "short_name": "KPL METRONOME",
+  "description": "Metronomo per kayak sprint – Precisione. Ritmo. Performance.",
+  "lang": "it",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090b10",
+  "theme_color": "#090b10",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
